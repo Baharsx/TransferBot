@@ -176,7 +176,17 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   }
   console.log(chalk.blue.bold(data));
 
-const chalk = require('chalk');
+const chalk = require('chalk'); // بارگذاری صحیح chalk
+
+const figlet = require('figlet'); // بارگذاری بعد از chalk
+
+figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
+  if (err) {
+    console.log(chalk.red('Error loading art')); // حالا chalk به درستی در دسترس است
+    return;
+  }
+  console.log(chalk.blue.bold(data));
+});
 
 const rainbowSkeleton = `
 ${chalk.red('                                                            _____')}
@@ -196,6 +206,7 @@ ${chalk.blue('                                                  TG: @SirSL - Dar
 `;
 
 console.log(rainbowSkeleton);
+
 
 
 
