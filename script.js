@@ -176,23 +176,29 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   }
   console.log(chalk.blue.bold(data));
 
-console.log(chalk.hex('#800080')(`
-                                                            _____
-                                                         .-"     "-.
-                                                        /           \\
-                                                       |             |
-                                                       |,    .-.    ,|
-                                                       | )(__/ \\__)( |
-                                                       |/     /\\     \\|
-                                                       (_     ^^     _)
-                                                        \\__|IIIIII|__/
-                                                         | \\IIIIII/ |
-                                                         \\          /
-                                                          \\--------\\
+const chalk = require('chalk');
 
-                                                  TG: @SirSL - Dark Arts Master
+const chalk = require('chalk');
 
-  `));
+const rainbowSkeleton = `
+${chalk.red('                                                            _____')}
+${chalk.orange('                                                         .-"     "-.')}
+${chalk.yellow('                                                        /           \\')}
+${chalk.green('                                                       |             |')}
+${chalk.blue('                                                       |,    .-.    ,|')}
+${chalk.magenta('                                                       | )(__/ \\__)( |')}
+${chalk.cyan('                                                       |/     /\\     \\|')}
+${chalk.white('                                                       (_     ^^     _)')}
+${chalk.red('                                                        \\__|IIIIII|__/')}
+${chalk.orange('                                                         | \\IIIIII/ |')}
+${chalk.yellow('                                                         \\          /')}
+${chalk.green('                                                          \\--------\\')}
+
+${chalk.blue('                                                  TG: @SirSL - Dark Arts Master')}
+`;
+
+console.log(rainbowSkeleton);
+
 
   console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
   const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
