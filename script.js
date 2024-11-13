@@ -209,6 +209,7 @@ ${chalk.blue('                                                  TG: @SirSL - Dar
 console.log(rainbowSkeleton); // نمایش طرح اسکلت با رنگ‌های مختلف
 
 
+
   console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
   const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
 
