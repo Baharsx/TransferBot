@@ -180,7 +180,7 @@ const chalk = require('chalk');
 
 const rainbowSkeleton = `
 ${chalk.red('                                                            _____')}
-${chalk.orange('                                                         .-"     "-.')}
+${chalk.hex('#FFA500')('                                                         .-"     "-.')}
 ${chalk.yellow('                                                        /           \\')}
 ${chalk.green('                                                       |             |')}
 ${chalk.blue('                                                       |,    .-.    ,|')}
@@ -188,7 +188,7 @@ ${chalk.magenta('                                                       | )(__/ 
 ${chalk.cyan('                                                       |/     /\\     \\|')}
 ${chalk.white('                                                       (_     ^^     _)')}
 ${chalk.red('                                                        \\__|IIIIII|__/')}
-${chalk.orange('                                                         | \\IIIIII/ |')}
+${chalk.hex('#FFA500')('                                                         | \\IIIIII/ |')}
 ${chalk.yellow('                                                         \\          /')}
 ${chalk.green('                                                          \\--------\\')}
 
@@ -196,6 +196,7 @@ ${chalk.blue('                                                  TG: @SirSL - Dar
 `;
 
 console.log(rainbowSkeleton);
+
 
 
   console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
