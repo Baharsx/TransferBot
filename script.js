@@ -67,7 +67,7 @@ async function distributeTotalBalance(senderKeys, recipientAddresses, successful
 
   for (const recipientAddress of recipientAddresses) {
     if (successfulAddresses.has(recipientAddress)) {
-      console.log(chalk.hex('#FFA500').italic(`⚠️ Skipping already successful address: ${recipientAddress}`));
+      console.log(chalk.yellow(`⚠️ Skipping already successful address: ${recipientAddress}`));
       continue;
     }
 
@@ -123,7 +123,7 @@ async function transferFullBalance(senderKeys, recipientAddresses, successfulFil
     const recipientAddress = recipientAddresses[i];
 
     if (successfulAddresses.has(recipientAddress)) {
-      console.log(chalk.hex('#FFA500').italic(`⚠️ Skipping already successful address: ${recipientAddress}`));
+      console.log(chalk.yellow(`⚠️ Skipping already successful address: ${recipientAddress}`));
       continue;
     }
 
@@ -215,24 +215,7 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
     })
     .then(() => {
       console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
-
-      // Display "Completed" in 7 colors
-      function displayRainbowText() {
-        const colors = [
-          chalk.red,
-          chalk.hex('#FFA500'),
-          chalk.yellow,
-          chalk.green,
-          chalk.blue,
-          chalk.magenta,
-          chalk.cyan
-        ];
-        const text = 'C O M P L E T E D';
-        for (let i = 0; i < text.length; i++) {
-          console.log(colors[i % colors.length](text[i]));
-        }
-      }
-      displayRainbowText();
+      console.log(chalk.bold.magenta("C O M P L E T E D"));
     })
     .catch((error) => {
       spinner.fail(chalk.red.bold(`❌ Error during transfer: ${error.message}`));
