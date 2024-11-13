@@ -176,19 +176,19 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   }
   console.log(chalk.blue.bold(data));
 
-console.log(chalk.red(`
-                                                          _____
-                                                       .-"     "-.
-                                                      /           \\
-                                                     |             |
-                                                     |,    .-.    ,|
-                                                     | )(__/ \\__)( |
-                                                     |/     /\\     \\|
-                                                     (_     ^^     _)
-                                                      \\__|IIIIII|__/
-                                                       | \\IIIIII/ |
-                                                       \\          /
-                                                        \\--------\\
+console.log(chalk.purple(`
+                                                            _____
+                                                         .-"     "-.
+                                                        /           \\
+                                                       |             |
+                                                       |,    .-.    ,|
+                                                       | )(__/ \\__)( |
+                                                       |/     /\\     \\|
+                                                       (_     ^^     _)
+                                                        \\__|IIIIII|__/
+                                                         | \\IIIIII/ |
+                                                         \\          /
+                                                          \\--------\\
 
                                                   TG: @SirSL - Dark Arts Master
 
