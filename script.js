@@ -53,7 +53,6 @@ async function getTotalBalance(senderKeys) {
 // Function to distribute total balance equally to each pk recipient
 async function distributeTotalBalance(senderKeys, recipientAddresses, successfulFile) {
   const successfulAddresses = loadSuccessfulAddresses(successfulFile);
-
   const totalBalanceLamports = await getTotalBalance(senderKeys);
   const lamportsPerRecipient = Math.floor((totalBalanceLamports - REQUIRED_RENT_LAMPORTS) / recipientAddresses.length);
 
@@ -169,7 +168,7 @@ async function askUserToContinue() {
 // Get public addresses from pk private keys
 const pkAddresses = pk.privateKeys.map(privateKey => getKeypairFromBase58(privateKey).publicKey.toBase58());
 
-// Display "Welcome to SoheiL Transfer Bot"
+// Display welcome message with figlet
 figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   if (err) {
     console.log(chalk.red('Error loading art'));
@@ -178,7 +177,7 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   console.log(chalk.blue.bold(data));
 });
 
-// Rainbow skeleton display
+// Display the rainbow skeleton art
 const rainbowSkeleton = `
 ${chalk.red('                                                            _____')}
 ${chalk.hex('#FFA500')('                                                         .-"     "-.')}
@@ -198,7 +197,7 @@ ${chalk.blue('                                                  TG: @SirSL - Dar
 
 console.log(rainbowSkeleton);
 
-// Transfer process
+// Start the transfer process
 console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
 const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
 
@@ -224,13 +223,13 @@ distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
       const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
       const text = 'C O M P L E T E D';
       
-      let coloredText = text.split(' ').map((letter, index) => chalk[colors[index]](letter)).join(' ');
-      console.log(coloredText);
+      for (let i = 0; i < text.length; i++) {
+        console.log(chalk[colors[i % colors.length]](text[i]));
+      }
     }
+
     displayRainbowText();
   })
   .catch(error => {
-    spinner.fail(chalk.red.bold('❌ Error occurred during transfers.'));
-    console.error(chalk.red(error));
+    spinner.fail(chalk.red.bold(`❌ Error during transfer: ${error.message}`));
   });
-});
