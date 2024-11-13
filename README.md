@@ -10,7 +10,7 @@ sudo apt-get install -y nodejs
 # Initialize project and install dependencies
 ```
 npm init -y
-npm install bs58@4.0.1 @solana/web3.js@1.35.0 fs path chalk ora figlet inquirer
+npm install bs58@4.0.1 @solana/web3.js@1.35.0 fs path ora@4.0.4 chalk@4.1.2 figlet inquirer
 ```
 # create p1k.js and pk.js and wallet.js
 ```
