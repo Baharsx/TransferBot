@@ -1,17 +1,17 @@
-const { Connection, Keypair, Transaction, SystemProgram, PublicKey, LAMPORTS_PER_SOL } = require('@solana/web3.js');
-const fs = require('fs');
-const path = require('path');
-const bs58 = require('bs58');
-const chalk = require('chalk');
-const ora = require('ora');
-const figlet = require('figlet');
-const inquirer = require('inquirer');
-const p1k = require('./p1k');
-const pk = require('./pk');
-const wallets = require('./wallets');
+import { Connection, Keypair, Transaction, SystemProgram, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import fs from 'fs';
+import path from 'path';
+import bs58 from 'bs58';
+import chalk from 'chalk';
+import ora from 'ora';
+import figlet from 'figlet';
+import inquirer from 'inquirer';
+import p1k from './p1k.js';
+import pk from './pk.js';
+import wallets from './wallets.js';
 
 (async () => {
-  const chalkAnimation = await import('chalk-animation');
+  const chalkAnimation = (await import('chalk-animation')).default;
 
   // RPC endpoint
   const RPC_URL = 'https://api.testnet.v1.sonic.game';
@@ -187,17 +187,17 @@ const wallets = require('./wallets');
           console.log(`
              _____
           .-"     "-.
-         /           \
+         /           \\
         |             |
         |,    .-.    ,|
-        | )(__/ \__)( |
-        |/     /\     \|
+        | )(__/ \\__)( |
+        |/     /\\     \\|
         (_     ^^     _)
-         \__|IIIIII|__/
-          | \IIIIII/ |
-          \          /
-           \`--------\`
-
+         \\__|IIIIII|__/ 
+          | \\IIIIII/ | 
+          \\          /
+           \\`--------\`
+      
       @SirSL - Dark Arts Master
     `);
           resolve();
@@ -218,29 +218,12 @@ const wallets = require('./wallets');
 
       // Ask user to continue to phase 2
       const proceedToPhase2 = await askUserToContinue();
-      if (!proceedToPhase2) {
-        console.log(chalk.red.bold('🛑 Process terminated by user.'));
-        return;
+      if (proceedToPhase2) {
+        console.log(chalk.cyan('Phase 2: Transferring full balance from pk wallets to wallets...'));
+        await transferFullBalance(pk.privateKeys, wallets.addresses, 'successful_pk_to_wallets.txt');
       }
-
-      console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
-      return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
     })
-    .then(() => {
-      console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
-
-      // Display "Completed" in 7 colors
-      function displayRainbowText() {
-        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
-        const text = 'C O M P L E T E D';
-        
-        let coloredText = text.split(' ').map((letter, index) => chalk[colors[index]](letter)).join(' ');
-        console.log(coloredText);
-      }
-      displayRainbowText();
-    })
-    .catch(error => {
-      spinner.fail(chalk.red.bold('❌ Error occurred during transfers.'));
-      console.error(chalk.red(error));
+    .catch((error) => {
+      spinner.fail(chalk.red.bold('❌ Failed during the transfer process:', error));
     });
 })();
