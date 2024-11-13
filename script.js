@@ -177,27 +177,15 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   console.log(chalk.blue.bold(data));
 
 const chalk = require('chalk'); // بارگذاری صحیح chalk
+const figlet = require('figlet'); // بارگذاری صحیح figlet
 
-const figlet = require('figlet'); // بارگذاری بعد از chalk
-
+// استفاده از figlet برای نمایش متن هنری
 figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   if (err) {
     console.log(chalk.red('Error loading art')); // حالا chalk به درستی در دسترس است
     return;
   }
-  console.log(chalk.blue.bold(data));
-});
-
-const chalk = require('chalk'); // بارگذاری صحیح chalk
-const figlet = require('figlet'); // بارگذاری بعد از chalk
-
-// استفاده از figlet برای تولید متن با استایل
-figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
-  if (err) {
-    console.log(chalk.red('Error loading art')); // حالا chalk به درستی در دسترس است
-    return;
-  }
-  console.log(chalk.blue.bold(data)); // نمایش اثر متنی با رنگ آبی و پررنگ
+  console.log(chalk.blue.bold(data)); // نمایش متن هنری با رنگ آبی
 });
 
 // طرح اسکلت با رنگ‌های مختلف
@@ -218,10 +206,7 @@ ${chalk.green('                                                          \\-----
 ${chalk.blue('                                                  TG: @SirSL - Dark Arts Master')}
 `;
 
-console.log(rainbowSkeleton); // نمایش اسکلت با رنگ‌های مختلف
-
-
-
+console.log(rainbowSkeleton); // نمایش طرح اسکلت با رنگ‌های مختلف
 
 
   console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
