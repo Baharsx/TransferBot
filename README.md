@@ -3,9 +3,11 @@
 
 
 # Install Node.js and npm (LTS version)
-```bash
+```
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt-get install -y nodejs
+```
+# Initialize project and install dependencies
 ```
 npm init -y
 npm install chalk@4 ora@5 figlet inquirer@8.2.0 cli-table
