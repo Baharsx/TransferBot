@@ -196,7 +196,7 @@ import wallets from './wallets.js';
          \\__|IIIIII|__/ 
           | \\IIIIII/ | 
           \\          /
-           \\`--------\`
+           \\`--------\\`
       
       @SirSL - Dark Arts Master
     `);
