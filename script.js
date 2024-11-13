@@ -178,8 +178,6 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
 
 const chalk = require('chalk');
 
-const chalk = require('chalk');
-
 const rainbowSkeleton = `
 ${chalk.red('                                                            _____')}
 ${chalk.orange('                                                         .-"     "-.')}
