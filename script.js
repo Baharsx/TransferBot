@@ -6,6 +6,7 @@ const chalk = require('chalk');
 const ora = require('ora');
 const figlet = require('figlet');
 const inquirer = require('inquirer');
+const chalkAnimation = require('chalk-animation');
 const p1k = require('./p1k');
 const pk = require('./pk');
 const wallets = require('./wallets');
@@ -168,59 +169,77 @@ async function askUserToContinue() {
 // Get public addresses from pk private keys
 const pkAddresses = pk.privateKeys.map(privateKey => getKeypairFromBase58(privateKey).publicKey.toBase58());
 
-figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
-  if (err) return console.log(chalk.red('Error loading art'));
-  console.log(chalk.blue.bold(data));
+// Display welcome text with animation
+async function displayWelcomeText() {
+  return new Promise((resolve) => {
+    figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
+      if (err) {
+        console.log(chalk.red('Error loading art'));
+        resolve();
+        return;
+      }
 
-  console.log(`
+      const rainbow = chalkAnimation.rainbow(data);
+      setTimeout(() => {
+        rainbow.stop();
+        console.log(`
            _____
         .-"     "-.
-       /           \\
+       /           \
       |             |
       |,    .-.    ,|
-      | )(__/ \\__)( |
-      |/     /\\     \\|
+      | )(__/ \__)( |
+      |/     /\     \|
       (_     ^^     _)
-       \\__|IIIIII|__/
-        | \\IIIIII/ |
-        \\          /
+       \__|IIIIII|__/
+        | \IIIIII/ |
+        \          /
          \`--------\`
 
     @SirSL - Dark Arts Master
   `);
-
-console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
-const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
-
-distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
-  .then(async () => {
-    spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
-
-    // Ask user to continue to phase 2
-    const proceedToPhase2 = await askUserToContinue();
-    if (!proceedToPhase2) {
-      console.log(chalk.red.bold('🛑 Process terminated by user.'));
-      return;
-    }
-
-    console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
-    return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
-  })
-  .then(() => {
-    console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
-
-    // Display "Completed" in 7 colors
-    function displayRainbowText() {
-      const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
-      const text = 'C O M P L E T E D';
-      
-      let coloredText = text.split(' ').map((letter, index) => chalk[colors[index]](letter)).join(' ');
-      console.log(coloredText);
-    }
-    displayRainbowText();
-  })
-  .catch(error => {
-    spinner.fail(chalk.red.bold('❌ Error occurred during transfers.'));
-    console.error(chalk.red(error));
+        resolve();
+      }, 4000);
+    });
   });
-});
+}
+
+// Execute the transfer process
+(async () => {
+  await displayWelcomeText();
+
+  console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
+  const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
+
+  distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
+    .then(async () => {
+      spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
+
+      // Ask user to continue to phase 2
+      const proceedToPhase2 = await askUserToContinue();
+      if (!proceedToPhase2) {
+        console.log(chalk.red.bold('🛑 Process terminated by user.'));
+        return;
+      }
+
+      console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
+      return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
+    })
+    .then(() => {
+      console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
+
+      // Display "Completed" in 7 colors
+      function displayRainbowText() {
+        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
+        const text = 'C O M P L E T E D';
+        
+        let coloredText = text.split(' ').map((letter, index) => chalk[colors[index]](letter)).join(' ');
+        console.log(coloredText);
+      }
+      displayRainbowText();
+    })
+    .catch(error => {
+      spinner.fail(chalk.red.bold('❌ Error occurred during transfers.'));
+      console.error(chalk.red(error));
+    });
+})();
