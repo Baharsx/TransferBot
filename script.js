@@ -176,22 +176,23 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   }
   console.log(chalk.blue.bold(data));
 
-  console.log(`
-                                                                              _____
-                                                                           .-"     "-.
-                                                                          /           \\
-                                                                         |             |
-                                                                         |,    .-.    ,|
-                                                                         | )(__/ \\__)( |
-                                                                         |/     /\\     \\|
-                                                                         (_     ^^     _)
-                                                                          \\__|IIIIII|__/
-                                                                           | \\IIIIII/ |
-                                                                           \\          /
-                                                                            \\--------\\
+console.log(chalk.red(`
+                                                          _____
+                                                       .-"     "-.
+                                                      /           \\
+                                                     |             |
+                                                     |,    .-.    ,|
+                                                     | )(__/ \\__)( |
+                                                     |/     /\\     \\|
+                                                     (_     ^^     _)
+                                                      \\__|IIIIII|__/
+                                                       | \\IIIIII/ |
+                                                       \\          /
+                                                        \\--------\\
 
-                                                                     TG: @SirSL - Dark Arts Master
-  `);
+                                                  TG: @SirSL - Dark Arts Master
+
+  `));
 
   console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
   const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
