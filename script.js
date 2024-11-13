@@ -178,20 +178,20 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
 
   // Display the rainbow skeleton art after welcome message
   const rainbowSkeleton = `
-  ${chalk.red('                                                            _____')}
-  ${chalk.hex('#FFA500')('                                                         .-"     "-.')}
-  ${chalk.yellow('                                                        /           \\')}
-  ${chalk.green('                                                       |             |')}
-  ${chalk.blue('                                                       |,    .-.    ,|')}
-  ${chalk.magenta('                                                       | )(__/ \\__)( |')}
-  ${chalk.cyan('                                                       |/     /\\     \\|')}
-  ${chalk.white('                                                       (_     ^^     _)')}
-  ${chalk.red('                                                        \\__|IIIIII|__/')}
-  ${chalk.hex('#FFA500')('                                                         | \\IIIIII/ |')}
-  ${chalk.yellow('                                                         \\          /')}
-  ${chalk.green('                                                          \\--------\\')}
+  ${chalk.red('                                                              _____')}
+  ${chalk.hex('#FFA500')('                                                           .-"     "-.')}
+  ${chalk.yellow('                                                          /           \\')}
+  ${chalk.green('                                                         |             |')}
+  ${chalk.blue('                                                         |,    .-.    ,|')}
+  ${chalk.magenta('                                                         | )(__/ \\__)( |')}
+  ${chalk.cyan('                                                         |/     /\\     \\|')}
+  ${chalk.white('                                                         (_     ^^     _)')}
+  ${chalk.red('                                                          \\__|IIIIII|__/')}
+  ${chalk.hex('#FFA500')('                                                           | \\IIIIII/ |')}
+  ${chalk.yellow('                                                           \\          /')}
+  ${chalk.green('                                                            \\--------\\')}
 
-  ${chalk.blue('                                                  TG: @SirSL - Dark Arts Master')}
+  ${chalk.blue('                                                    TG: @SirSL - Dark Arts Master')}
   `;
   console.log(rainbowSkeleton);
 
