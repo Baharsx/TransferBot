@@ -11,7 +11,7 @@ import pk from './pk.js';
 import wallets from './wallets.js';
 
 (async () => {
-  const chalkAnimation = (await import('chalk-animation')).default; // اصلاح این خط
+  const chalkAnimation = (await import('chalk-animation')).default;
 
   // RPC endpoint
   const RPC_URL = 'https://api.testnet.v1.sonic.game';
