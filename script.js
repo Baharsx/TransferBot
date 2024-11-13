@@ -218,17 +218,23 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
 
       // Display "Completed" in 7 colors
       function displayRainbowText() {
-        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
+        const colors = [
+          chalk.red,
+          chalk.hex('#FFA500'),
+          chalk.yellow,
+          chalk.green,
+          chalk.blue,
+          chalk.magenta,
+          chalk.cyan
+        ];
         const text = 'C O M P L E T E D';
-
         for (let i = 0; i < text.length; i++) {
-          console.log(chalk[colors[i % colors.length]](text[i]));
+          console.log(colors[i % colors.length](text[i]));
         }
       }
-
       displayRainbowText();
     })
-    .catch(error => {
+    .catch((error) => {
       spinner.fail(chalk.red.bold(`❌ Error during transfer: ${error.message}`));
     });
 });
