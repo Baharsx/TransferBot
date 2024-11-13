@@ -11,7 +11,7 @@ import pk from './pk.js';
 import wallets from './wallets.js';
 
 (async () => {
-  const chalkAnimation = (await import('chalk-animation')).default;
+  const chalkAnimation = (await import('chalk-animation')).default; // اصلاح این خط
 
   // RPC endpoint
   const RPC_URL = 'https://api.testnet.v1.sonic.game';
@@ -214,9 +214,7 @@ import wallets from './wallets.js';
 
   distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
     .then(async () => {
-      spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
-
-      // Ask user to continue to phase 2
+      spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk addresses'));
       const proceedToPhase2 = await askUserToContinue();
       if (proceedToPhase2) {
         console.log(chalk.cyan('Phase 2: Transferring full balance from pk wallets to wallets...'));
