@@ -1,3 +1,4 @@
+process.removeAllListeners('warning');
 const { Connection, Keypair, Transaction, SystemProgram, PublicKey, LAMPORTS_PER_SOL } = require('@solana/web3.js');
 const fs = require('fs');
 const path = require('path');
