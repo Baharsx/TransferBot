@@ -169,26 +169,16 @@ async function askUserToContinue() {
 // Get public addresses from pk private keys
 const pkAddresses = pk.privateKeys.map(privateKey => getKeypairFromBase58(privateKey).publicKey.toBase58());
 
+// Display welcome message with figlet
 figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   if (err) {
     console.log(chalk.red('Error loading art'));
     return;
   }
   console.log(chalk.blue.bold(data));
-
-const chalk = require('chalk'); // بارگذاری صحیح chalk
-const figlet = require('figlet'); // بارگذاری صحیح figlet
-
-// استفاده از figlet برای نمایش متن هنری
-figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
-  if (err) {
-    console.log(chalk.red('Error loading art')); // حالا chalk به درستی در دسترس است
-    return;
-  }
-  console.log(chalk.blue.bold(data)); // نمایش متن هنری با رنگ آبی
 });
 
-// طرح اسکلت با رنگ‌های مختلف
+// Display the rainbow skeleton art
 const rainbowSkeleton = `
 ${chalk.red('                                                            _____')}
 ${chalk.hex('#FFA500')('                                                         .-"     "-.')}
@@ -206,42 +196,40 @@ ${chalk.green('                                                          \\-----
 ${chalk.blue('                                                  TG: @SirSL - Dark Arts Master')}
 `;
 
-console.log(rainbowSkeleton); // نمایش طرح اسکلت با رنگ‌های مختلف
+console.log(rainbowSkeleton);
 
+// Start the transfer process
+console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
+const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
 
+distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
+  .then(async () => {
+    spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
 
-  console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
-  const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
+    // Ask user to continue to phase 2
+    const proceedToPhase2 = await askUserToContinue();
+    if (!proceedToPhase2) {
+      console.log(chalk.red.bold('🛑 Process terminated by user.'));
+      return;
+    }
 
-  distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
-    .then(async () => {
-      spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
+    console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
+    return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
+  })
+  .then(() => {
+    console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
 
-      // Ask user to continue to phase 2
-      const proceedToPhase2 = await askUserToContinue();
-      if (!proceedToPhase2) {
-        console.log(chalk.red.bold('🛑 Process terminated by user.'));
-        return;
-      }
-
-      console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
-      return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
-    })
-    .then(() => {
-      console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
-
-      // Display "Completed" in 7 colors
-      function displayRainbowText() {
-        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
-        const text = 'C O M P L E T E D';
-        
-        let coloredText = text.split(' ').map((letter, index) => chalk[colors[index]](letter)).join(' ');
-        console.log(coloredText);
-      }
-      displayRainbowText();
-    })
-    .catch(error => {
-      spinner.fail(chalk.red.bold('❌ Error occurred during transfers.'));
-      console.error(chalk.red(error));
-    });
-});
+    // Display "Completed" in 7 colors
+    function displayRainbowText() {
+      const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
+      const text = 'C O M P L E T E D';
+      
+      let coloredText = text.split(' ').map((letter, index) => chalk[colors[index]](letter)).join(' ');
+      console.log(coloredText);
+    }
+    displayRainbowText();
+  })
+  .catch(error => {
+    spinner.fail(chalk.red.bold('❌ Error occurred during transfers.'));
+    console.error(chalk.red(error));
+  });
