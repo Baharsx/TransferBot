@@ -68,7 +68,7 @@ async function distributeTotalBalance(senderKeys, recipientAddresses, successful
 
   for (const recipientAddress of recipientAddresses) {
     if (successfulAddresses.has(recipientAddress)) {
-      console.log(chalk.hex('#FFA500').italic(⚠️ Skipping already successful address: ${recipientAddress}));
+      console.log(chalk.hex('#FFA500').italic(`⚠️ Skipping already successful address: ${recipientAddress}`));
       continue;
     }
 
