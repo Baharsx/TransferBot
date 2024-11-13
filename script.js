@@ -175,61 +175,60 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
     return;
   }
   console.log(chalk.blue.bold(data));
-});
 
-// Display the rainbow skeleton art
-const rainbowSkeleton = `
-${chalk.red('                                                            _____')}
-${chalk.hex('#FFA500')('                                                         .-"     "-.')}
-${chalk.yellow('                                                        /           \\')}
-${chalk.green('                                                       |             |')}
-${chalk.blue('                                                       |,    .-.    ,|')}
-${chalk.magenta('                                                       | )(__/ \\__)( |')}
-${chalk.cyan('                                                       |/     /\\     \\|')}
-${chalk.white('                                                       (_     ^^     _)')}
-${chalk.red('                                                        \\__|IIIIII|__/')}
-${chalk.hex('#FFA500')('                                                         | \\IIIIII/ |')}
-${chalk.yellow('                                                         \\          /')}
-${chalk.green('                                                          \\--------\\')}
+  // Display the rainbow skeleton art after welcome message
+  const rainbowSkeleton = `
+  ${chalk.red('                                                            _____')}
+  ${chalk.hex('#FFA500')('                                                         .-"     "-.')}
+  ${chalk.yellow('                                                        /           \\')}
+  ${chalk.green('                                                       |             |')}
+  ${chalk.blue('                                                       |,    .-.    ,|')}
+  ${chalk.magenta('                                                       | )(__/ \\__)( |')}
+  ${chalk.cyan('                                                       |/     /\\     \\|')}
+  ${chalk.white('                                                       (_     ^^     _)')}
+  ${chalk.red('                                                        \\__|IIIIII|__/')}
+  ${chalk.hex('#FFA500')('                                                         | \\IIIIII/ |')}
+  ${chalk.yellow('                                                         \\          /')}
+  ${chalk.green('                                                          \\--------\\')}
 
-${chalk.blue('                                                  TG: @SirSL - Dark Arts Master')}
-`;
+  ${chalk.blue('                                                  TG: @SirSL - Dark Arts Master')}
+  `;
+  console.log(rainbowSkeleton);
 
-console.log(rainbowSkeleton);
+  // Start the transfer process
+  console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
+  const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
 
-// Start the transfer process
-console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
-const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
+  distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
+    .then(async () => {
+      spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
 
-distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
-  .then(async () => {
-    spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
-
-    // Ask user to continue to phase 2
-    const proceedToPhase2 = await askUserToContinue();
-    if (!proceedToPhase2) {
-      console.log(chalk.red.bold('🛑 Process terminated by user.'));
-      return;
-    }
-
-    console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
-    return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
-  })
-  .then(() => {
-    console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
-
-    // Display "Completed" in 7 colors
-    function displayRainbowText() {
-      const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
-      const text = 'C O M P L E T E D';
-      
-      for (let i = 0; i < text.length; i++) {
-        console.log(chalk[colors[i % colors.length]](text[i]));
+      // Ask user to continue to phase 2
+      const proceedToPhase2 = await askUserToContinue();
+      if (!proceedToPhase2) {
+        console.log(chalk.red.bold('🛑 Process terminated by user.'));
+        return;
       }
-    }
 
-    displayRainbowText();
-  })
-  .catch(error => {
-    spinner.fail(chalk.red.bold(`❌ Error during transfer: ${error.message}`));
-  });
+      console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
+      return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
+    })
+    .then(() => {
+      console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
+
+      // Display "Completed" in 7 colors
+      function displayRainbowText() {
+        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'magenta', 'cyan'];
+        const text = 'C O M P L E T E D';
+
+        for (let i = 0; i < text.length; i++) {
+          console.log(chalk[colors[i % colors.length]](text[i]));
+        }
+      }
+
+      displayRainbowText();
+    })
+    .catch(error => {
+      spinner.fail(chalk.red.bold(`❌ Error during transfer: ${error.message}`));
+    });
+});
