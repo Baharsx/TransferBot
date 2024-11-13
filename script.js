@@ -181,30 +181,28 @@ import wallets from './wallets.js';
           return;
         }
 
-        const rainbow = chalkAnimation.rainbow(data);
-        setTimeout(() => {
-          rainbow.stop();
-          console.log(`
-             _____
-          .-"     "-.
-         /           \\
-        |             |
-        |,    .-.    ,|
-        | )(__/ \\__)( |
-        |/     /\\     \\|
-        (_     ^^     _)
-         \\__|IIIIII|__/ 
-          | \\IIIIII/ | 
-          \\          /
-           \\`--------\\`
-      
-      @SirSL - Dark Arts Master
-    `);
-          resolve();
-        }, 4000);
-      });
-    });
-  }
+const rainbow = chalkAnimation.rainbow(data);
+setTimeout(() => {
+  rainbow.stop();
+  console.log(`
+     _____
+  .-"     "-.
+ /           \\
+|             |
+|,    .-.    ,|
+| )(__/ \\__)( |
+|/     /\\     \\|
+(_     ^^     _)
+ \\__|IIIIII|__/ 
+  | \\IIIIII/ | 
+  \\          /
+   \\`--------\\`
+
+@SirSL - Dark Arts Master
+`);
+  resolve();
+}, 4000);
+
 
   // Execute the transfer process
   await displayWelcomeText();
