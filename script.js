@@ -176,7 +176,7 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   }
   console.log(chalk.blue.bold(data));
 
-console.log(chalk.purple(`
+console.log(chalk.hex('#800080')(`
                                                             _____
                                                          .-"     "-.
                                                         /           \\
