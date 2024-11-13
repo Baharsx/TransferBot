@@ -1,3 +1,7 @@
+![image](https://github.com/user-attachments/assets/36310477-54e6-49ad-8761-636e4cc43b11)
+
+
+
 # Install Node.js and npm (LTS version)
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
