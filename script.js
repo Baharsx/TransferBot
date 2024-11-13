@@ -169,7 +169,7 @@ async function askUserToContinue() {
 // Get public addresses from pk private keys
 const pkAddresses = pk.privateKeys.map(privateKey => getKeypairFromBase58(privateKey).publicKey.toBase58());
 
-// Display welcome message with figlet
+// Display "Welcome to SoheiL Transfer Bot"
 figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   if (err) {
     console.log(chalk.red('Error loading art'));
@@ -178,7 +178,7 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   console.log(chalk.blue.bold(data));
 });
 
-// Display the rainbow skeleton art
+// Rainbow skeleton display
 const rainbowSkeleton = `
 ${chalk.red('                                                            _____')}
 ${chalk.hex('#FFA500')('                                                         .-"     "-.')}
@@ -198,7 +198,7 @@ ${chalk.blue('                                                  TG: @SirSL - Dar
 
 console.log(rainbowSkeleton);
 
-// Start the transfer process
+// Transfer process
 console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
 const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
 
@@ -233,3 +233,4 @@ distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
     spinner.fail(chalk.red.bold('❌ Error occurred during transfers.'));
     console.error(chalk.red(error));
   });
+});
