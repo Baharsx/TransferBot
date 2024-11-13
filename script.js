@@ -188,6 +188,19 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   console.log(chalk.blue.bold(data));
 });
 
+const chalk = require('chalk'); // بارگذاری صحیح chalk
+const figlet = require('figlet'); // بارگذاری بعد از chalk
+
+// استفاده از figlet برای تولید متن با استایل
+figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
+  if (err) {
+    console.log(chalk.red('Error loading art')); // حالا chalk به درستی در دسترس است
+    return;
+  }
+  console.log(chalk.blue.bold(data)); // نمایش اثر متنی با رنگ آبی و پررنگ
+});
+
+// طرح اسکلت با رنگ‌های مختلف
 const rainbowSkeleton = `
 ${chalk.red('                                                            _____')}
 ${chalk.hex('#FFA500')('                                                         .-"     "-.')}
@@ -205,7 +218,8 @@ ${chalk.green('                                                          \\-----
 ${chalk.blue('                                                  TG: @SirSL - Dark Arts Master')}
 `;
 
-console.log(rainbowSkeleton);
+console.log(rainbowSkeleton); // نمایش اسکلت با رنگ‌های مختلف
+
 
 
 
