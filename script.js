@@ -30,7 +30,7 @@ function loadSuccessfulAddresses(fileName) {
 // Save a successful recipient address to avoid re-sending to it
 function saveSuccessfulAddress(fileName, address) {
   const filePath = path.join(__dirname, fileName);
-  fs.appendFileSync(filePath, ${address}\n);
+  fs.appendFileSync(filePath, `${address}\n`);
 }
 
 // Convert private key from Base58 to Keypair
