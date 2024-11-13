@@ -217,8 +217,10 @@ distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
       let coloredText = text.split(' ').map((letter, index) => chalk[colors[index]](letter)).join(' ');
       console.log(coloredText);
     }
-
-    // Call the rainbow text display function at the end of the script
     displayRainbowText();
   })
-  .catch((error) => console.error(chalk.red.bold("❌ Transfer process failed:"), error));
+  .catch(error => {
+    spinner.fail(chalk.red.bold('❌ Error occurred during transfers.'));
+    console.error(chalk.red(error));
+  });
+});
