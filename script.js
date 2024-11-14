@@ -1,4 +1,3 @@
-process.removeAllListeners('warning');
 const { Connection, Keypair, Transaction, SystemProgram, PublicKey, LAMPORTS_PER_SOL } = require('@solana/web3.js');
 const fs = require('fs');
 const path = require('path');
@@ -6,6 +5,7 @@ const bs58 = require('bs58');
 const chalk = require('chalk');
 const ora = require('ora');
 const figlet = require('figlet');
+const inquirer = require('inquirer'); // For user input
 const p1k = require('./p1k');
 const pk = require('./pk');
 const wallets = require('./wallets');
@@ -163,22 +163,50 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   `;
   console.log(rainbowSkeleton);
 
-  // Start the transfer process
-  console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
-  const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
+  // Ask user to choose which step to perform
+  inquirer.prompt([
+    {
+      type: 'list',
+      name: 'step',
+      message: 'Which step would you like to proceed with?',
+      choices: [
+        { name: 'Step 1: Distribute Total Balance from p1k to pk', value: 1 },
+        { name: 'Step 2: Transfer Full Balance from pk to wallets', value: 2 }
+      ]
+    }
+  ])
+  .then(answers => {
+    if (answers.step === 1) {
+      // Start the transfer process for Step 1
+      console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
+      const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
 
-  distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
-    .then(() => {
-      spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
-
+      distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
+        .then(() => {
+          spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
+          console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
+          return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
+        })
+        .then(() => {
+          console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
+          console.log(chalk.bold.magenta("C O M P L E T E D"));
+        })
+        .catch((error) => {
+          spinner.fail(chalk.red.bold(`❌ Error during transfer: ${error.message}`));
+        });
+    } else if (answers.step === 2) {
+      // Start the transfer process for Step 2
       console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
-      return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
-    })
-    .then(() => {
-      console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
-      console.log(chalk.bold.magenta("C O M P L E T E D"));
-    })
-    .catch((error) => {
-      spinner.fail(chalk.red.bold(`❌ Error during transfer: ${error.message}`));
-    });
+      const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
+
+      transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt')
+        .then(() => {
+          spinner.succeed(chalk.green.bold('✅ Completed transfer from pk to wallets.'));
+          console.log(chalk.bold.magenta("C O M P L E T E D"));
+        })
+        .catch((error) => {
+          spinner.fail(chalk.red.bold(`❌ Error during transfer: ${error.message}`));
+        });
+    }
+  });
 });
