@@ -1,6 +1,10 @@
 ![image](https://github.com/user-attachments/assets/36310477-54e6-49ad-8761-636e4cc43b11)
 
-
+# Clone TransferBot
+```
+git clone https://github.com/Baharsx/TransferBot.git
+cd TransferBot
+```
 
 # Install Node.js and npm (LTS version)
 ```
