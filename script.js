@@ -39,76 +39,54 @@ function getKeypairFromBase58(privateKey) {
   return Keypair.fromSecretKey(secretKey);
 }
 
-// Function to get total balance of all p1k wallets
-async function getTotalBalance(senderKeys) {
-  let totalBalance = 0;
-  for (const privateKey of senderKeys) {
-    const keypair = getKeypairFromBase58(privateKey);
-    const balance = await connection.getBalance(keypair.publicKey);
-    totalBalance += balance;
-  }
-  return totalBalance;
+// Function to get balance of a specific sender wallet
+async function getSenderBalance(senderKeypair) {
+  const balance = await connection.getBalance(senderKeypair.publicKey);
+  return balance;
 }
 
 // Function to distribute total balance equally to each pk recipient
 async function distributeTotalBalance(senderKeys, recipientAddresses, successfulFile) {
   const successfulAddresses = loadSuccessfulAddresses(successfulFile);
-  const totalBalanceLamports = await getTotalBalance(senderKeys);
-  const lamportsPerRecipient = Math.floor((totalBalanceLamports - REQUIRED_RENT_LAMPORTS) / recipientAddresses.length);
 
-  if (lamportsPerRecipient <= 0) {
-    console.log(chalk.red.bold("⛔ Insufficient total balance to distribute among recipients."));
-    return;
-  }
+  for (let senderIndex = 0; senderIndex < senderKeys.length; senderIndex++) {
+    const senderKeypair = getKeypairFromBase58(senderKeys[senderIndex]);
+    let senderBalanceLamports = await getSenderBalance(senderKeypair);
 
-  let senderIndex = 0;
-  let senderKeypair = getKeypairFromBase58(senderKeys[senderIndex]);
-  let senderBalanceLamports = await connection.getBalance(senderKeypair.publicKey);
+    // Calculate lamports to send per recipient for this sender
+    const lamportsPerRecipient = Math.floor((senderBalanceLamports - REQUIRED_RENT_LAMPORTS) / recipientAddresses.length);
 
-  for (const recipientAddress of recipientAddresses) {
-    if (successfulAddresses.has(recipientAddress)) {
-      console.log(chalk.yellow(`⚠️ Skipping already successful address: ${recipientAddress}`));
+    if (lamportsPerRecipient <= 0) {
+      console.log(chalk.red.bold(`⛔ Insufficient balance in sender wallet ${senderKeypair.publicKey.toBase58()} for distribution.`));
       continue;
     }
 
-    while (senderIndex < senderKeys.length) {
-      if (senderBalanceLamports < lamportsPerRecipient + REQUIRED_RENT_LAMPORTS) {
-        senderIndex++;
-        if (senderIndex >= senderKeys.length) {
-          console.log(chalk.red.bold("⛔ All sender wallets exhausted."));
-          return;
-        }
-        senderKeypair = getKeypairFromBase58(senderKeys[senderIndex]);
-        senderBalanceLamports = await connection.getBalance(senderKeypair.publicKey);
+    for (const recipientAddress of recipientAddresses) {
+      if (successfulAddresses.has(recipientAddress)) {
+        console.log(chalk.yellow(`⚠️ Skipping already successful address: ${recipientAddress}`));
         continue;
       }
 
-      let attempts = 0;
-      const maxAttempts = 3;
+      try {
+        // Create and send the transaction
+        const transaction = new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: senderKeypair.publicKey,
+            toPubkey: new PublicKey(recipientAddress),
+            lamports: lamportsPerRecipient,
+          })
+        );
 
-      while (attempts < maxAttempts) {
-        try {
-          const transaction = new Transaction().add(
-            SystemProgram.transfer({
-              fromPubkey: senderKeypair.publicKey,
-              toPubkey: new PublicKey(recipientAddress),
-              lamports: lamportsPerRecipient,
-            })
-          );
+        const signature = await connection.sendTransaction(transaction, [senderKeypair]);
+        await connection.confirmTransaction(signature, 'confirmed');
+        console.log(chalk.green.bold(`✅ Transferred ${(lamportsPerRecipient / LAMPORTS_PER_SOL).toFixed(6)} SOL from ${senderKeypair.publicKey.toBase58()} to ${recipientAddress} with signature: ${signature}`));
 
-          const signature = await connection.sendTransaction(transaction, [senderKeypair]);
-          await connection.confirmTransaction(signature, 'confirmed');
-          console.log(chalk.green.bold(`✅ Transferred ${(lamportsPerRecipient / LAMPORTS_PER_SOL).toFixed(6)} SOL from ${senderKeypair.publicKey.toBase58()} to ${recipientAddress} with signature: ${signature}`));
+        saveSuccessfulAddress(successfulFile, recipientAddress);
+        senderBalanceLamports -= lamportsPerRecipient;
 
-          saveSuccessfulAddress(successfulFile, recipientAddress);
-          senderBalanceLamports -= lamportsPerRecipient;
-          break;
-        } catch (error) {
-          attempts++;
-          if (attempts >= maxAttempts) {
-            console.error(chalk.red.bold(`❌ Failed to transfer to ${recipientAddress}: ${error.message}`));
-          }
-        }
+      } catch (error) {
+        console.error(chalk.red.bold(`❌ Failed to transfer to ${recipientAddress}: ${error.message}`));
+        continue;
       }
     }
   }
@@ -128,7 +106,7 @@ async function transferFullBalance(senderKeys, recipientAddresses, successfulFil
     }
 
     try {
-      const senderBalanceLamports = await connection.getBalance(senderKeypair.publicKey);
+      const senderBalanceLamports = await getSenderBalance(senderKeypair);
       const lamportsToSend = senderBalanceLamports - REQUIRED_RENT_LAMPORTS;
 
       if (lamportsToSend > 0) {
@@ -143,7 +121,7 @@ async function transferFullBalance(senderKeys, recipientAddresses, successfulFil
         const signature = await connection.sendTransaction(transaction, [senderKeypair]);
         await connection.confirmTransaction(signature, 'confirmed');
         console.log(chalk.green.bold(`✅ Transferred ${(lamportsToSend / LAMPORTS_PER_SOL).toFixed(6)} SOL from ${senderKeypair.publicKey.toBase58()} to ${recipientAddress} with signature: ${signature}`));
-        
+
         saveSuccessfulAddress(successfulFile, recipientAddress);
       } else {
         console.log(chalk.red.bold(`⛔ Insufficient funds in wallet ${senderKeypair.publicKey.toBase58()} for transfer to ${recipientAddress}.`));
@@ -167,7 +145,7 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   console.log(chalk.blue.bold(data));
 
   // Display the rainbow skeleton art after welcome message
-  const rainbowSkeleton = `
+  const rainbowSkeleton = ` 
   ${chalk.red('                                                              _____')}
   ${chalk.hex('#FFA500')('                                                           .-"     "-.')}
   ${chalk.yellow('                                                          /           \\')}
