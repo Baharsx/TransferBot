@@ -23,3 +23,7 @@ nano wallets.js
 ```
 node script.js
 ```
+# if you want to check your (wallet.js) balance
+```
+node balancechecker.js
+```
