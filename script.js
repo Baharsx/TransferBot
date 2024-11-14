@@ -171,16 +171,16 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   const rainbowSkeleton = `
   ${chalk.red('                                                              _____')}
   ${chalk.hex('#FFA500')('                                                           .-"     "-.')}
-  ${chalk.yellow('                                                          /           \\')}
+  ${chalk.yellow('                                                          /           \')}
   ${chalk.green('                                                         |             |')}
   ${chalk.blue('                                                         |,    .-.    ,|')}
-  ${chalk.magenta('                                                         | )(__/ \\__)( |')}
-  ${chalk.cyan('                                                         |/     /\\     \\|')}
+  ${chalk.magenta('                                                         | )(__/ \__)( |')}
+  ${chalk.cyan('                                                         |/     /\     \|')}
   ${chalk.white('                                                         (_     ^^     _)')}
-  ${chalk.red('                                                          \\__|IIIIII|__/')}
-  ${chalk.hex('#FFA500')('                                                           | \\IIIIII/ |')}
-  ${chalk.yellow('                                                           \\          /')}
-  ${chalk.green('                                                            \\--------\\')}
+  ${chalk.red('                                                          \__|IIIIII|__/')}
+  ${chalk.hex('#FFA500')('                                                           | \IIIIII/ |')}
+  ${chalk.yellow('                                                           \          /')}
+  ${chalk.green('                                                            \--------\')}
 
   ${chalk.blue('                                                    TG: @SirSL - Dark Arts Master')}
   `;
