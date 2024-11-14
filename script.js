@@ -6,7 +6,6 @@ const bs58 = require('bs58');
 const chalk = require('chalk');
 const ora = require('ora');
 const figlet = require('figlet');
-const inquirer = require('inquirer');  // added for user confirmation before each transaction
 const p1k = require('./p1k');
 const pk = require('./pk');
 const wallets = require('./wallets');
@@ -31,7 +30,7 @@ function loadSuccessfulAddresses(fileName) {
 // Save a successful recipient address to avoid re-sending to it
 function saveSuccessfulAddress(fileName, address) {
   const filePath = path.join(__dirname, fileName);
-  fs.appendFileSync(filePath, `${address}\n`);
+  fs.appendFileSync(filePath, ${address}\n);
 }
 
 // Convert private key from Base58 to Keypair
@@ -58,29 +57,17 @@ async function distributeTotalBalance(senderKeys, recipientAddresses, successful
     const lamportsPerRecipient = Math.floor((senderBalanceLamports - REQUIRED_RENT_LAMPORTS) / recipientAddresses.length);
 
     if (lamportsPerRecipient <= 0) {
-      console.log(chalk.red.bold(`⛔ Insufficient balance in sender wallet ${senderKeypair.publicKey.toBase58()} for distribution.`));
+      console.log(chalk.red.bold(⛔ Insufficient balance in sender wallet ${senderKeypair.publicKey.toBase58()} for distribution.));
       continue;
     }
 
     for (const recipientAddress of recipientAddresses) {
       if (successfulAddresses.has(recipientAddress)) {
-        console.log(chalk.yellow(`⚠️ Skipping already successful address: ${recipientAddress}`));
+        console.log(chalk.yellow(⚠️ Skipping already successful address: ${recipientAddress}));
         continue;
       }
 
       try {
-        // Ask for confirmation before sending transaction
-        const answer = await inquirer.prompt({
-          type: 'confirm',
-          name: 'proceed',
-          message: chalk.cyan(`Do you want to send ${(lamportsPerRecipient / LAMPORTS_PER_SOL).toFixed(6)} SOL to ${recipientAddress}?`),
-        });
-
-        if (!answer.proceed) {
-          console.log(chalk.yellow(`Skipping transfer to ${recipientAddress}`));
-          continue;
-        }
-
         // Create and send the transaction
         const transaction = new Transaction().add(
           SystemProgram.transfer({
@@ -92,13 +79,13 @@ async function distributeTotalBalance(senderKeys, recipientAddresses, successful
 
         const signature = await connection.sendTransaction(transaction, [senderKeypair]);
         await connection.confirmTransaction(signature, 'confirmed');
-        console.log(chalk.green.bold(`✅ Transferred ${(lamportsPerRecipient / LAMPORTS_PER_SOL).toFixed(6)} SOL from ${senderKeypair.publicKey.toBase58()} to ${recipientAddress} with signature: ${signature}`));
+        console.log(chalk.green.bold(✅ Transferred ${(lamportsPerRecipient / LAMPORTS_PER_SOL).toFixed(6)} SOL from ${senderKeypair.publicKey.toBase58()} to ${recipientAddress} with signature: ${signature}));
 
         saveSuccessfulAddress(successfulFile, recipientAddress);
         senderBalanceLamports -= lamportsPerRecipient;
 
       } catch (error) {
-        console.error(chalk.red.bold(`❌ Failed to transfer to ${recipientAddress}: ${error.message}`));
+        console.error(chalk.red.bold(❌ Failed to transfer to ${recipientAddress}: ${error.message}));
         continue;
       }
     }
@@ -114,7 +101,7 @@ async function transferFullBalance(senderKeys, recipientAddresses, successfulFil
     const recipientAddress = recipientAddresses[i];
 
     if (successfulAddresses.has(recipientAddress)) {
-      console.log(chalk.yellow(`⚠️ Skipping already successful address: ${recipientAddress}`));
+      console.log(chalk.yellow(⚠️ Skipping already successful address: ${recipientAddress}));
       continue;
     }
 
@@ -123,18 +110,6 @@ async function transferFullBalance(senderKeys, recipientAddresses, successfulFil
       const lamportsToSend = senderBalanceLamports - REQUIRED_RENT_LAMPORTS;
 
       if (lamportsToSend > 0) {
-        // Ask for confirmation before sending transaction
-        const answer = await inquirer.prompt({
-          type: 'confirm',
-          name: 'proceed',
-          message: chalk.cyan(`Do you want to send ${(lamportsToSend / LAMPORTS_PER_SOL).toFixed(6)} SOL from ${senderKeypair.publicKey.toBase58()} to ${recipientAddress}?`),
-        });
-
-        if (!answer.proceed) {
-          console.log(chalk.yellow(`Skipping transfer to ${recipientAddress}`));
-          continue;
-        }
-
         const transaction = new Transaction().add(
           SystemProgram.transfer({
             fromPubkey: senderKeypair.publicKey,
@@ -145,14 +120,14 @@ async function transferFullBalance(senderKeys, recipientAddresses, successfulFil
 
         const signature = await connection.sendTransaction(transaction, [senderKeypair]);
         await connection.confirmTransaction(signature, 'confirmed');
-        console.log(chalk.green.bold(`✅ Transferred ${(lamportsToSend / LAMPORTS_PER_SOL).toFixed(6)} SOL from ${senderKeypair.publicKey.toBase58()} to ${recipientAddress} with signature: ${signature}`));
+        console.log(chalk.green.bold(✅ Transferred ${(lamportsToSend / LAMPORTS_PER_SOL).toFixed(6)} SOL from ${senderKeypair.publicKey.toBase58()} to ${recipientAddress} with signature: ${signature}));
 
         saveSuccessfulAddress(successfulFile, recipientAddress);
       } else {
-        console.log(chalk.red.bold(`⛔ Insufficient funds in wallet ${senderKeypair.publicKey.toBase58()} for transfer to ${recipientAddress}.`));
+        console.log(chalk.red.bold(⛔ Insufficient funds in wallet ${senderKeypair.publicKey.toBase58()} for transfer to ${recipientAddress}.));
       }
     } catch (error) {
-      console.error(chalk.red.bold(`❌ Failed to transfer to ${recipientAddress}: ${error.message}`));
+      console.error(chalk.red.bold(❌ Failed to transfer to ${recipientAddress}: ${error.message}));
       continue;
     }
   }
@@ -170,33 +145,40 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   console.log(chalk.blue.bold(data));
 
   // Display the rainbow skeleton art after welcome message
-  const rainbowSkeleton = `
-${chalk.red('                                                              _____')}
-${chalk.hex('#FFA500')('                                                           .-"     "-.')}
-${chalk.yellow('                                                          /           \\')}
-${chalk.green('                                                         |             |')}
-${chalk.blue('                                                         |,    .-.    ,|')}
-${chalk.magenta('                                                         | )(__/ \\__)( |')}
-${chalk.cyan('                                                         |/     /\\     \\|')}
-${chalk.white('                                                         (_     ^^     _)')}
-${chalk.red('                                                          \\__|IIIIII|__/')}
-${chalk.hex('#FFA500')('                                                           | \\IIIIII/ |')}
-${chalk.yellow('                                                           \\          /')}
-${chalk.green('                                                            \\--------\\')}
+  const rainbowSkeleton =  
+  ${chalk.red('                                                              _____')}
+  ${chalk.hex('#FFA500')('                                                           .-"     "-.')}
+  ${chalk.yellow('                                                          /           \\')}
+  ${chalk.green('                                                         |             |')}
+  ${chalk.blue('                                                         |,    .-.    ,|')}
+  ${chalk.magenta('                                                         | )(__/ \\__)( |')}
+  ${chalk.cyan('                                                         |/     /\\     \\|')}
+  ${chalk.white('                                                         (_     ^^     _)')}
+  ${chalk.red('                                                          \\__|IIIIII|__/')}
+  ${chalk.hex('#FFA500')('                                                           | \\IIIIII/ |')}
+  ${chalk.yellow('                                                           \\          /')}
+  ${chalk.green('                                                            \\--------\\')}
 
-${chalk.blue('                                                    TG: @SirSL - Dark Arts Master')}
-  `;
+  ${chalk.blue('                                                    TG: @SirSL - Dark Arts Master')}
+  ;
   console.log(rainbowSkeleton);
 
   // Start the transfer process
   console.log(chalk.bold.yellow("✨ Starting transfer from p1k to pk..."));
   const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
 
-  distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_addresses.txt')
+  distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
     .then(() => {
-      spinner.succeed(chalk.green.bold('✨ All transfers complete!'));
+      spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
+
+      console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
+      return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
+    })
+    .then(() => {
+      console.log(chalk.green.bold("✅ Completed transfer from pk to wallets."));
+      console.log(chalk.bold.magenta("C O M P L E T E D"));
     })
     .catch((error) => {
-      spinner.fail(chalk.red.bold('❌ Transfer failed: ' + error.message));
+      spinner.fail(chalk.red.bold(❌ Error during transfer: ${error.message}));
     });
 });
