@@ -156,16 +156,6 @@ async function transferFullBalance(senderKeys, recipientAddresses, successfulFil
   }
 }
 
-// Prompt user for confirmation to start phase 2
-async function askUserToContinue() {
-  const answer = await inquirer.prompt({
-    type: 'confirm',
-    name: 'proceed',
-    message: chalk.cyan('Do you want to proceed to phase 2?'),
-  });
-  return answer.proceed;
-}
-
 // Get public addresses from pk private keys
 const pkAddresses = pk.privateKeys.map(privateKey => getKeypairFromBase58(privateKey).publicKey.toBase58());
 
@@ -201,15 +191,8 @@ figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   const spinner = ora(chalk.hex('#FF69B4')('💸 Transferring...')).start();
 
   distributeTotalBalance(p1k.privateKeys, pkAddresses, 'successful_p1k_to_pk.txt')
-    .then(async () => {
+    .then(() => {
       spinner.succeed(chalk.green.bold('✅ Completed transfer from p1k to pk.'));
-
-      // Ask user to continue to phase 2
-      const proceedToPhase2 = await askUserToContinue();
-      if (!proceedToPhase2) {
-        console.log(chalk.red.bold('🛑 Process terminated by user.'));
-        return;
-      }
 
       console.log(chalk.bold.yellow("✨ Starting transfer from pk to wallets..."));
       return transferFullBalance(pk.privateKeys, wallets.walletAddresses, 'successful_pk_to_wallets.txt');
