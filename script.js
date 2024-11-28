@@ -178,7 +178,7 @@ ${chalk.green('                                                            \\---
 ${chalk.blue('                                                    TG: @SirSL - Dark Arts Master')}
 `;
 
-figlet('Welcome to Transfer App', (err, data) => {
+figlet('Welcome to SoheiL Transfer Bot', (err, data) => {
   if (err) return console.log(chalk.red('Error loading art'));
   console.log(chalk.blue(data));
 
