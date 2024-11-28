@@ -75,10 +75,11 @@ async function distributeTotalBalance(senderKeys, recipientAddresses, successful
   let senderKeypair = getKeypairFromBase58(senderKeys[senderIndex]);
   let senderBalanceLamports = await connection.getBalance(senderKeypair.publicKey);
 
-  for (const recipientAddress of recipientAddresses) {
+  // Create an array of promises for each transaction
+  const transactionPromises = recipientAddresses.map(async (recipientAddress) => {
     if (successfulAddresses.has(recipientAddress)) {
       console.log(chalk.yellow(`⏩ Skipping already successful address: ${recipientAddress}`));
-      continue;
+      return;
     }
 
     while (senderIndex < senderKeys.length) {
@@ -120,7 +121,10 @@ async function distributeTotalBalance(senderKeys, recipientAddresses, successful
         senderBalanceLamports = await connection.getBalance(senderKeypair.publicKey);
       }
     }
-  }
+  });
+
+  // Wait for all transactions to complete
+  await Promise.all(transactionPromises);
 }
 
 /**
@@ -129,13 +133,13 @@ async function distributeTotalBalance(senderKeys, recipientAddresses, successful
 async function transferFullBalance(senderKeys, recipientAddresses, successfulFile) {
   const successfulAddresses = loadSuccessfulAddresses(successfulFile);
 
-  for (let i = 0; i < senderKeys.length; i++) {
-    const senderKeypair = getKeypairFromBase58(senderKeys[i]);
+  const transactionPromises = senderKeys.map(async (senderKey, i) => {
+    const senderKeypair = getKeypairFromBase58(senderKey);
     const recipientAddress = recipientAddresses[i];
 
     if (successfulAddresses.has(recipientAddress)) {
       console.log(chalk.yellow(`⏩ Skipping already successful address: ${recipientAddress}`));
-      continue;
+      return;
     }
 
     try {
@@ -161,9 +165,11 @@ async function transferFullBalance(senderKeys, recipientAddresses, successfulFil
       }
     } catch (error) {
       console.error(chalk.red(`❌ Failed to transfer to ${recipientAddress}:`), error);
-      continue;
     }
-  }
+  });
+
+  // Wait for all transactions to complete
+  await Promise.all(transactionPromises);
 }
 
 // Get public addresses from pk private keys
