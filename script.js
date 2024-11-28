@@ -1,3 +1,6 @@
+// Disable deprecation warnings
+process.noDeprecation = true;
+
 const { Connection, Keypair, Transaction, SystemProgram, PublicKey, LAMPORTS_PER_SOL } = require('@solana/web3.js');
 const fs = require('fs');
 const path = require('path');
@@ -16,9 +19,7 @@ const connection = new Connection(RPC_URL, 'confirmed');
 // Minimum balance reserved for transaction fees
 const REQUIRED_RENT_LAMPORTS = 0.001 * LAMPORTS_PER_SOL;
 
-/**
- * Load addresses with successful transfers to avoid duplicate sends
- */
+// Function to load successful addresses
 function loadSuccessfulAddresses(fileName) {
   const filePath = path.join(__dirname, fileName);
   if (fs.existsSync(filePath)) {
@@ -28,25 +29,19 @@ function loadSuccessfulAddresses(fileName) {
   return new Set();
 }
 
-/**
- * Save a successful recipient address to avoid re-sending to it
- */
+// Function to save a successful recipient address
 function saveSuccessfulAddress(fileName, address) {
   const filePath = path.join(__dirname, fileName);
   fs.appendFileSync(filePath, `${address}\n`);
 }
 
-/**
- * Convert private key from Base58 to Keypair
- */
+// Convert private key from Base58 to Keypair
 function getKeypairFromBase58(privateKey) {
   const secretKey = bs58.decode(privateKey);
   return Keypair.fromSecretKey(secretKey);
 }
 
-/**
- * Get total balance of all p1k wallets
- */
+// Function to get total balance of all p1k wallets
 async function getTotalBalance(senderKeys) {
   let totalBalance = 0;
   for (const privateKey of senderKeys) {
@@ -57,9 +52,7 @@ async function getTotalBalance(senderKeys) {
   return totalBalance;
 }
 
-/**
- * Distribute total balance equally to each pk recipient
- */
+// Function to distribute total balance equally among recipients
 async function distributeTotalBalance(senderKeys, recipientAddresses, successfulFile) {
   const successfulAddresses = loadSuccessfulAddresses(successfulFile);
 
@@ -123,9 +116,7 @@ async function distributeTotalBalance(senderKeys, recipientAddresses, successful
   }
 }
 
-/**
- * Transfer the entire balance (minus fees) from each sender in pk to corresponding wallet in wallets
- */
+// Function to transfer full balance (minus fees) from each sender to corresponding wallet
 async function transferFullBalance(senderKeys, recipientAddresses, successfulFile) {
   const successfulAddresses = loadSuccessfulAddresses(successfulFile);
 
