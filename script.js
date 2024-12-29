@@ -13,7 +13,7 @@ const pk = require('./pk');
 const wallets = require('./wallets');
 
 // RPC endpoint
-const RPC_URL = 'https://api.testnet.v1.sonic.game';
+const RPC_URL = 'RPC IS HERE';
 const connection = new Connection(RPC_URL, 'confirmed');
 
 // Minimum balance reserved for transaction fees
