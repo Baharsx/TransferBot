@@ -4,7 +4,7 @@ const { Connection, PublicKey, LAMPORTS_PER_SOL } = require('@solana/web3.js');
 const wallets = require('./wallets'); // wallets.js file containing the list of addresses
 
 // RPC settings
-const RPC_URL = 'https://api.testnet.v1.sonic.game';
+const RPC_URL = 'RPC IS HERE';
 const connection = new Connection(RPC_URL, 'confirmed');
 
 // Function to check wallet balances
